@@ -9,4 +9,4 @@ deploy:
   provider: script
   skip_cleanup: true
   script:
-    - curl -T ip-filter-1.0.$TRAVIS_BUILD_NUMBER.deb -uansochnev:$BINTRAY_API_KEY "https://api.bintray.com/content/ansochnev/otus-cpp/ip-filter/$TRAVIS_BUILD_NUMBER/pool/main/h1/ip-filter-1.0.$TRAVIS_BUILD_NUMBER.deb;deb_distribution=homework;deb_component=main;deb_architecture=amd64;publish=1"
+    - curl -T ip-filter-1.0.$TRAVIS_BUILD_NUMBER.deb -uansochnev:$BINTRAY_API_KEY "https://api.bintray.com/content/ansochnev/otus-cpp/ip-filter/$TRAVIS_BUILD_NUMBER/pool/main/h2/ip-filter-1.0.$TRAVIS_BUILD_NUMBER.deb;deb_distribution=homework;deb_component=main;deb_architecture=amd64;publish=1"
