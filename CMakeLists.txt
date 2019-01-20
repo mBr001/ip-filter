@@ -10,7 +10,17 @@ set_target_properties(ip_filter PROPERTIES
     COMPILE_OPTIONS "-Wpedantic;-Wall;-Wextra"
 )
 
+################################################################################
+
 install(TARGETS ip_filter RUNTIME DESTINATION bin)
+
+################################################################################
+
+enable_testing()
+
+add_test(required_test test.sh)
+
+################################################################################
 
 set(CPACK_GENERATOR DEB)
 
@@ -26,3 +36,4 @@ set(CPACK_DEBIAN_PACKAGE_DESCRIPTION
 set(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION})
 
 include(CPack)
+
