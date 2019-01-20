@@ -10,8 +10,8 @@ IPv4::IPv4(const std::string& s)
         throw BadAddrException();
     }
 
-    auto to_byte = [](const std::string& s) -> decltype(auto) {
-        long b = std::stoi(s);
+    auto to_byte = [](const std::string& s) -> decltype(this->ip) {
+        int b = std::stoi(s);
         if(b < 0 || b > 255) 
         {
             throw BadAddrException();

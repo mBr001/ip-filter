@@ -20,10 +20,55 @@ std::vector<IPv4> read_pool_from_stdin()
     std::vector<IPv4> ip_pool;
     for(std::string line; std::getline(std::cin, line);) 
     {
-        std::vector<std::string> v = split(line, '\t'); 
+        auto v = split(line, '\t'); 
+        
+        // Already rvalue, but without any profit.
+        //     IPv4 ip(v.at(0));
+        //     ip_pool.push_back(std::move(ip));
         ip_pool.push_back(IPv4(v.at(0)));
     }
     return ip_pool;
+}
+
+
+template<typename... Args> 
+std::vector<IPv4> filter(const std::vector<IPv4>& ip_pool, Args... args)
+{
+    std::vector<IPv4> ret;
+
+    int arr[] = {args...};
+    int len = sizeof...(args);
+
+    for(auto ip = ip_pool.cbegin(); ip != ip_pool.cend(); ip++)
+    {
+        for(int i = 0; i < len; i++) 
+        {
+            if(arr[i] != ip->get(i)) 
+            {
+                goto skip_push;
+            }
+        }
+        ret.push_back(*ip);
+skip_push:
+        ;
+    }
+
+    return ret;
+}
+
+
+std::vector<IPv4> filter_any(const std::vector<IPv4>& ip_pool, int value) 
+{
+    std::vector<IPv4> ret;
+    for(auto ip = ip_pool.cbegin(); ip != ip_pool.cend(); ++ip)
+    {
+        if(ip->A() == value || ip->B() == value || 
+           ip->C() == value || ip->D() == value) 
+        {
+            ret.push_back(*ip);
+        }
+    }
+    return ret;
 }
 
 
@@ -31,7 +76,7 @@ int main()
 {
     try 
     {
-        std::vector<IPv4> ip_pool = read_pool_from_stdin();
+        auto ip_pool = read_pool_from_stdin();
         
         // Reverse sort.
         std::sort(
@@ -43,38 +88,9 @@ int main()
         );
         print(ip_pool);
 
-        // Filter 1.*.*.*
-        decltype(ip_pool) pool_1;
-        for(auto ip = ip_pool.cbegin(); ip != ip_pool.cend(); ++ip)
-        {
-            if(ip->A() == 1) 
-            {
-                pool_1.push_back(*ip);
-            }
-        }
-        print(pool_1);
-
-        // Filter 47.70.*.*
-        decltype(ip_pool) pool_46_70;
-        for(auto ip = ip_pool.cbegin(); ip != ip_pool.cend(); ++ip)
-        {
-            if(ip->A() == 46 && ip->B() == 70) 
-            {
-                pool_46_70.push_back(*ip);
-            }
-        }
-        print(pool_46_70);
-
-        // Filter 46.
-        decltype(ip_pool) pool_any;
-        for(auto ip = ip_pool.cbegin(); ip != ip_pool.cend(); ++ip)
-        {
-            if(ip->A() == 46 || ip->B() == 46 || ip->C() == 46 || ip->D() == 46) 
-            {
-                pool_any.push_back(*ip);
-            }
-        }
-        print(pool_any);
+        print(filter(ip_pool, 1));
+        print(filter(ip_pool, 46, 70));
+        print(filter_any(ip_pool, 46));
     } 
     catch(const std::exception &e) 
     {
