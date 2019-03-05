@@ -1,0 +1,19 @@
+dist: xenial
+
+language: cpp
+
+before_script:
+  - chmod 755 test/test.sh
+  - mv test/* .
+
+script:
+  - cmake .
+  - cmake --build .
+  - cmake --build . --target test
+  - cmake --build . --target package
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script:
+    - curl -T ip-filter-1.0.$TRAVIS_BUILD_NUMBER.deb -uansochnev:$BINTRAY_API_KEY "https://api.bintray.com/content/ansochnev/otus-cpp/ip-filter/$TRAVIS_BUILD_NUMBER/pool/main/h2/ip-filter-1.0.$TRAVIS_BUILD_NUMBER.deb;deb_distribution=homework;deb_component=main;deb_architecture=amd64;publish=1"
